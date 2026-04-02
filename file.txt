@@ -54,4 +54,4 @@ Requirements:
 - Video should be playable inside the modal
 - Clicking the close button OR clicking outside the modal closes it
 - When the modal closes, the video must stop playing (not continue in background)
-- No page libraries or dependencies — vanilla JS only, since we are not
+- No page libraries or dependencies — vanilla JS only, since we are not and do not modify any thing 
