@@ -1,6 +1,14 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, session
+import sqlite3
+from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
+app.secret_key = "your-secret-key-change-in-production"
+
+def get_db():
+    conn = sqlite3.connect('spendly.db')
+    conn.row_factory = sqlite3.Row
+    return conn
 
 
 # ------------------------------------------------------------------ #
@@ -17,8 +25,33 @@ def register():
     return render_template("register.html")
 
 
-@app.route("/login")
+@app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        print(f"Login attempt - Email: {email}")
+
+        conn = get_db()
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM users WHERE email = ?", (email,))
+        user = cursor.fetchone()
+        conn.close()
+
+        if user:
+            print(f"User found: {user['email']}")
+            if check_password_hash(user["password_hash"], password):
+                print("Password matched!")
+                session["user_id"] = user["id"]
+                session["email"] = user["email"]
+                return redirect(url_for("profile"))
+            else:
+                print("Password mismatch!")
+        else:
+            print("User not found!")
+
+        return render_template("login.html", error="Invalid email or password")
+
     return render_template("login.html")
 
 
@@ -43,7 +76,7 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    return render_template("profile.html")
 
 
 @app.route("/expenses/add")
