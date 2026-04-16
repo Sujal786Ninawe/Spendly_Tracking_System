@@ -1,14 +1,14 @@
 from flask import Flask, render_template, request, redirect, url_for, session
-import sqlite3
+from database.db import get_db, init_db, seed_db
 from werkzeug.security import check_password_hash
 
 app = Flask(__name__)
 app.secret_key = "your-secret-key-change-in-production"
 
-def get_db():
-    conn = sqlite3.connect('spendly.db')
-    conn.row_factory = sqlite3.Row
-    return conn
+# Initialize database on startup
+with app.app_context():
+    init_db()
+    seed_db()
 
 
 # ------------------------------------------------------------------ #

@@ -42,5 +42,23 @@ def seed_db():
     password_hash = generate_password_hash("demo123")
     cursor.execute("INSERT INTO users (name, email, password_hash) VALUES (?, ?, ?)", ("Demo User", "demo@spendly.com", password_hash))
 
+    # Get the demo user's ID
+    cursor.execute("SELECT id FROM users WHERE email = ?", ("demo@spendly.com",))
+    user_id = cursor.fetchone()[0]
+
+    # Insert 8 sample expenses across all 7 categories
+    expenses = [
+        (50.00, "Food", "2026-04-01", "Lunch at cafe"),
+        (25.50, "Transport", "2026-04-02", "Uber ride"),
+        (120.00, "Bills", "2026-04-03", "Electric bill"),
+        (45.00, "Health", "2026-04-05", "Pharmacy"),
+        (35.00, "Entertainment", "2026-04-07", "Movie tickets"),
+        (89.99, "Shopping", "2026-04-08", "New shirt"),
+        (15.00, "Other", "2026-04-09", "Miscellaneous"),
+        (65.00, "Food", "2026-04-10", "Dinner with friends"),
+    ]
+
+    cursor.executemany("INSERT INTO expenses (user_id, amount, category, date, description) VALUES (?, ?, ?, ?, ?)", [(user_id,) + expense for expense in expenses])
+
     conn.commit()
     conn.close()
