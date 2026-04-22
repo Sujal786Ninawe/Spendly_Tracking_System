@@ -1,0 +1,9 @@
+{
+  "default": {
+    "commands": {
+      "Run App": "python app.py",
+      "Run Tests": "pytest -v",
+      "Install Dependencies": "pip install -r requirements.txt"
+    }
+  }
+}
