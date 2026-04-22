@@ -1,25 +1,70 @@
 {% extends "base.html" %}
 
-{% block title %}Profile — Spendly{% endblock %}
+{% block title %}Profile Settings — Spendly{% endblock %}
 
 {% block content %}
 
 <section class="auth-section">
     <div class="auth-container">
+
         <div class="auth-header">
-            <h1 class="auth-title">Your Profile</h1>
-            <p class="auth-subtitle">Welcome back!</p>
+            <h1 class="auth-title">Profile Settings</h1>
+            <p class="auth-subtitle">Manage your account information</p>
         </div>
 
+        {% if success_message %}
+        <div class="success-message">{{ success_message }}</div>
+        {% endif %}
+
+        {% if error_message %}
+        <div class="auth-error">{{ error_message }}</div>
+        {% endif %}
+
+        <!-- Edit Profile Section -->
         <div class="auth-card">
-            <p>You are logged in.</p>
-            <p>Expense tracking features coming soon.</p>
+            <h2 class="section-title">Edit Profile</h2>
+            <form method="POST" action="/profile">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name"
+                           class="form-input" placeholder="Your name"
+                           value="{{ user.name }}" required minlength="2">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email"
+                           class="form-input" placeholder="your@email.com"
+                           value="{{ user.email }}" required>
+                </div>
+                <button type="submit" class="btn-submit">Save Changes</button>
+            </form>
         </div>
 
-        <p class="auth-switch">
-            Want to leave?
-            <a href="{{ url_for('logout') }}">Sign out</a>
-        </p>
+        <!-- Change Password Section -->
+        <div class="auth-card">
+            <h2 class="section-title">Change Password</h2>
+            <form method="POST" action="/profile/change-password">
+                <div class="form-group">
+                    <label for="current_password">Current Password</label>
+                    <input type="password" id="current_password" name="current_password"
+                           class="form-input" placeholder="Your current password"
+                           required>
+                </div>
+                <div class="form-group">
+                    <label for="new_password">New Password</label>
+                    <input type="password" id="new_password" name="new_password"
+                           class="form-input" placeholder="At least 8 characters"
+                           minlength="8" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm_password">Confirm New Password</label>
+                    <input type="password" id="confirm_password" name="confirm_password"
+                           class="form-input" placeholder="Confirm your new password"
+                           minlength="8" required>
+                </div>
+                <button type="submit" class="btn-submit">Update Password</button>
+            </form>
+        </div>
 
     </div>
 </section>
